@@ -1,11 +1,8 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Aluno {
 
     private Integer id;
@@ -15,7 +12,7 @@ public class Aluno {
     private Endereco endereco;
     private String serie;
     private String sexo;
-    private List<Disciplina> disciplinas;
+    private List<Disciplina> disciplinas = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -75,13 +72,5 @@ public class Aluno {
 
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
-    }
-
-    public void addDisciplina(Disciplina disciplina) {
-        disciplinas.add(disciplina);
-    }
-
-    public void remDisciplina(Disciplina disciplina) {
-        disciplinas.remove(disciplina);
     }
 }

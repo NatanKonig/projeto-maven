@@ -1,6 +1,5 @@
 package repository;
 
-import model.Aluno;
 import model.Disciplina;
 
 import javax.ejb.Stateful;
@@ -25,19 +24,13 @@ public class DisciplinaRepository {
         return null;
     }
 
-    public int cadastrar(Disciplina nova) {
-        int maxId = listaDisciplinas.size() + 1;
-        nova.setCod(maxId);
-        listaDisciplinas.add(nova);
-        return nova.getCod();
-    }
-
-    public void remover(Disciplina disciplina) throws Exception {
-        Disciplina atual = consultar(disciplina.getCod());
-        if (atual == null) {
-            throw new Exception("Disciplina não encontrado");
+    public Disciplina cadastrar(Disciplina nova) throws Exception {
+        if (consultar(nova.getCod()) == null) {
+            int maxId = listaDisciplinas.size() + 1;
+            nova.setCod(maxId);
+            listaDisciplinas.add(nova);
+            return nova;
         }
-        listaDisciplinas.remove(atual);
+        return consultar(nova.getCod());
     }
-
 }

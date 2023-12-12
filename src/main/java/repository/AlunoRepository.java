@@ -10,6 +10,7 @@ import java.util.List;
 @Stateful
 public class AlunoRepository {
 
+    private DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
     private static List<Aluno> listaAlunos = new ArrayList<>();
 
     public List<Aluno> getListaAlunos() {
@@ -54,12 +55,50 @@ public class AlunoRepository {
         listaAlunos.remove(atual);
     }
 
-    public int matricular(Aluno aluno, Disciplina disciplina) {
-        aluno.addDisciplina(disciplina);
-        return aluno.getId();
+    public Aluno matricular(int id, Disciplina disciplina) throws Exception {
+        Aluno aluno = consultar(id);
+        if (aluno == null) {
+            throw new Exception("Aluno não encontrado");
+        }
+        Disciplina disciplinaCadastrada = disciplinaRepository.consultar(disciplina.getCod());
+        if (disciplinaCadastrada == null) {
+        disciplina = disciplinaRepository.cadastrar(disciplina);
+        } else {
+            disciplina = disciplinaCadastrada;
+        }
+        aluno.getDisciplinas().add(disciplina);
+        return aluno;
     }
 
-    public void desmatricular(Aluno aluno, Disciplina disciplina) {
-        aluno.remDisciplina(disciplina);
+    public Aluno desmatricular(int id, Disciplina disciplina) throws Exception {
+        Aluno aluno = consultar(id);
+        if (aluno == null) {
+            throw new Exception("Aluno não encontrado");
+        }
+        disciplina = disciplinaRepository.consultar(disciplina.getCod());
+        if (disciplina == null) {
+            throw new Exception("Disciplina não encontrada");
+        }
+        for (Aluno al:  listaAlunos) {
+            if (al.getDisciplinas().contains(disciplina)) {
+                aluno.getDisciplinas().remove(disciplina);
+                return al;
+            }
+        }
+        throw new Exception("O aluno não se encontra na disciplina informada");
+    }
+
+    public List<Aluno> obterAlunosPorDisciplina(Disciplina disciplina) {
+        List<Aluno> alunosNaDisciplina = new ArrayList<>();
+
+        for (Aluno aluno : listaAlunos) {
+            for (Disciplina disc : aluno.getDisciplinas()) {
+                if (disc.getCod().equals(disciplina.getCod())) {
+                    alunosNaDisciplina.add(aluno);
+                    break;
+                }
+            }
+        }
+        return alunosNaDisciplina;
     }
 }

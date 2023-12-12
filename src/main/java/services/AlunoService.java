@@ -62,6 +62,22 @@ public class AlunoService {
     @PUT
     @Path("/{id}/matricular")
     public Response matricular(@PathParam("id") int id, Disciplina disciplina) {
-        return Response.ok().entity(alunoRepository.matricular(alunoRepository.consultar(id), disciplina)).build();
+        try {
+            alunoRepository.matricular(id, disciplina);
+            return Response.ok().entity(alunoRepository.consultar(id)).build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}/desmatricular")
+    public Response desmatricular(@PathParam("id") int id, Disciplina disciplina) {
+        try {
+            alunoRepository.desmatricular(id, disciplina);
+            return Response.ok().entity(alunoRepository.consultar(id)).build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 }
